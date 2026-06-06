@@ -25,6 +25,7 @@ interface Author {
     id: string
     name: string
     email: string
+    books?: Array<{ genre?: string | null }>
 }
 
 interface Pagination {
@@ -89,9 +90,9 @@ export default function BooksPage() {
         try {
             const res = await fetch('/api/authors')
             if (res.ok) {
-                const data = await res.json()
+                const data: Author[] = await res.json()
                 setAuthors(data)
-                const uniqueGenres = [...new Set(data.flatMap((a: Author) => a.books?.map((b: any) => b.genre) || []))].filter(Boolean)
+                const uniqueGenres = [...new Set(data.flatMap((a) => a.books?.map((b) => b.genre) || []))].filter(Boolean) as string[]
                 setGenres(uniqueGenres)
             }
         } catch (err) {
